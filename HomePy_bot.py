@@ -1,15 +1,11 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram import InputFile
-from bot_functions.functions import Website_choice, Password_Viewer, Weather, YoutubetoMP3
-import base64
+from bot_functions.functions import Website_choice, Password_Viewer, Weather, YoutubetoMP3, Surf_Forecast
 import logging
-import io
+
 
 updater = Updater(token='1143237883:AAGtv7aPHWxDMWqQHewfh-Luqw-pvy1hDbE', use_context=True)
 dispatcher = updater.dispatcher
-
-def progress(current, total):
-    print("{:.1f}%".format(current * 100 / total))
 
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="Bonjour, je suis PyBot ! Que puis faire pour vous aider ?")
@@ -31,25 +27,37 @@ def Cpassword(update, context):
 def ytpmp3(update, context):
     url = context.args[0]
     YoutubetoMP3(url)
+
+def surf(update, context, user_message):
+    spot_id = {"Petit-Havre": "454", "Anse Bertrand": "2553"} 
+    if "petit havre" in user_message.lower():
+        Surf_Forecast(spot_id["Petit-Havre"], context, update)
     
-def weather(update, context):
+def weather(update, context, weather_conditions):
+    for i in range(0, len(weather_conditions)):
+        if i == 0:
+            if weather_conditions[i] == "Clouds":
+                context.bot.send_message(chat_id=update.effective_chat.id, text='General : {}'.format("\U00002601"))
+            else:
+                context.bot.send_message(chat_id=update.effective_chat.id, text='General : {}'.format(weather_conditions[i]))
+
+        elif i == 2:
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Temperature : {} C°'.format(weather_conditions[i]))
+        elif i == 1:
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Pression : {}'.format(weather_conditions[i]))
+
+def Text_Checker(update, context):
     user_message = update.message.text
     if 'météo' in user_message or 'meteo' in user_message:
         weather_conditions = Weather()
-        for i in range(0, len(weather_conditions)):
-            if i == 0:
-                if weather_conditions[i] == "Clouds":
-                    context.bot.send_message(chat_id=update.effective_chat.id, text='General : {}'.format("\U00002601"))
-                else:
-                    context.bot.send_message(chat_id=update.effective_chat.id, text='General : {}'.format(weather_conditions[i]))
+        weather(update, context, weather_conditions)
 
-            elif i == 2:
-                context.bot.send_message(chat_id=update.effective_chat.id, text='Temperature : {} C°'.format(weather_conditions[i]))
-            elif i == 1:
-                context.bot.send_message(chat_id=update.effective_chat.id, text='Pression : {}'.format(weather_conditions[i]))
-    else:
-        pass
+    elif "surf" in user_message.lower():
+        print(user_message)
+        surf(update, context, user_message)
 
+def Surf_Prediction()
+#Machine learning, regression lineaire
 youtubemp3_handler = CommandHandler('youtubemp3', ytpmp3)
 dispatcher.add_handler(youtubemp3_handler)
 
@@ -62,7 +70,7 @@ dispatcher.add_handler(Cpassword_handler)
 Spassword_handler = CommandHandler("Spassword", Spassword)
 dispatcher.add_handler(Spassword_handler)
 
-weather_handler = MessageHandler(Filters.text, weather)
-dispatcher.add_handler(weather_handler)
+text_handler = MessageHandler(Filters.text, Text_Checker)
+dispatcher.add_handler(text_handler)
 
 updater.start_polling()
