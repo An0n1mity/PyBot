@@ -89,7 +89,7 @@ def Website_choice():
     return website_list
 
 def Weather():
-    token = "a0154549948d949ef41cff2b187a05a9"
+    token = #Insert API key
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
     current_city = "Guadeloupe"
     final_url = base_url + "q=" + current_city + "&appid=" + token
@@ -114,7 +114,7 @@ def YoutubetoMP3(url):
         ydl.download([url])
 
 def Surf_Forecast(spot, context, update):
-    key = "8def511a0766bc523baba1952c7594d6"
+    key = #Insert API key
     url = "http://magicseaweed.com/api/" + key + "/forecast/?spot_id=" + spot + "&units=eu"
     surf_data = requests.get(url).json() #List de dictionnaire
     local_time_day = int(str(datetime.datetime.utcfromtimestamp(int(time.time())))[8:10])
