@@ -4,7 +4,7 @@ from bot_functions.functions import Website_choice, Password_Viewer, Weather, Yo
 import logging
 
 
-updater = Updater(token='1143237883:AAGtv7aPHWxDMWqQHewfh-Luqw-pvy1hDbE', use_context=True)
+updater = Updater(token='', use_context=True)
 dispatcher = updater.dispatcher
 
 def start(update, context):
@@ -56,8 +56,6 @@ def Text_Checker(update, context):
         print(user_message)
         surf(update, context, user_message)
 
-def Surf_Prediction()
-#Machine learning, regression lineaire
 youtubemp3_handler = CommandHandler('youtubemp3', ytpmp3)
 dispatcher.add_handler(youtubemp3_handler)
 
